@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PurchaseMapper">
+ 	
+	<resultMap id="purchaseSelectMap" type="purchase">
+		<result property="tranNo" 				column="tran_no" 			jdbcType="NUMERIC"/>
+		<result property="buyer.userId" 		column="buyer_id" 			jdbcType="VARCHAR"/>
+		<result property="purchaseProd.prodNo"	column="prod_no" 			jdbcType="INTEGER"/> 		
+		<result property="divyAddr" 			column="dlvy_addr" 			jdbcType="VARCHAR" />
+		<result property="divyDate" 			column="dlvy_date" 			jdbcType="DATE" />
+		<result property="divyRequest" 			column="dlvy_request" 		jdbcType="VARCHAR" />
+		<result property="orderDate" 			column="order_date" 		jdbcType="DATE" />
+		<result property="paymentOption" 		column="payment_option" 	jdbcType="VARCHAR" />
+		<result property="receiverName" 		column="receiver_name" 		jdbcType="VARCHAR" />
+		<result property="receiverPhone" 		column="receiver_phone" 	jdbcType="VARCHAR" />
+		<result property="tranCode" 			column="tran_status_code" 	jdbcType="CHAR" />
+	</resultMap>
+
+	 
+	
+	<!-- SQL : INSERT -->
+	 <insert 	id="addPurchase"		parameterType="purchase">
+	 	INSERT 
+		INTO TRANSACTION 
+		VALUES (seq_transaction_TRAN_no.NEXTVAL, #{purchaseProd.prodNo:INTEGER}, #{buyer.userId:VARCHAR}, #{paymentOption:VARCHAR}, 
+		#{receiverName:VARCHAR}, #{receiverPhone:VARCHAR}, #{divyAddr:VARCHAR}, #{divyRequest:VARCHAR},1,SYSDATE,TO_DATE(#{divyDate:DATE},'YYYY-MM-DD'))
+	 </insert>
+	 
+	 <!-- SQL : SELECT ONE -->
+	 <select 	id="getPurchase"	parameterType="int"	resultMap="purchaseSelectMap">
+		SELECT * FROM TRANSACTION 
+		WHERE TRAN_NO = #{value}
+	 </select>
+	 
+	 <!-- SQL : UPDATE -->
+	 <update	id="updatePurchase"	parameterType="purchase" >
+	   	UPDATE TRANSACTION 
+	   	<set>
+	   		PAYMENT_OPTION = #{paymentOption:VARCHAR}, 
+			RECEIVER_NAME = #{receiverName:VARCHAR}, 
+			RECEIVER_PHONE = #{receiverPhone:VARCHAR}, 
+			DLVY_ADDR =	#{divyAddr:VARCHAR}, 
+			DLVY_REQUEST = #{divyRequest:VARCHAR}, 
+			DLVY_DATE = #{divyDate:VARCHAR}
+			 
+	   	</set>
+	   	WHERE TRAN_NO = #{tranNo}
+	 </update>
+	 
+	
+		 
+	<!-- SQL : SELECT LIST -->
+	<select  id="getPurchaseList"  parameterType="map"	resultMap="purchaseSelectMap">
+	  	SELECT *
+	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  					FROM		(	SELECT * 
+											FROM TRANSACTION 
+												<where>
+													BUYER_ID = #{buyerId} 
+													<if test="search.searchCondition != null">
+														<if test="search.searchCondition == 0 and search.searchKeyword !='' ">
+															AND TRAN_STATUS_CODE = #{search.searchKeyword} 
+														</if>
+													</if>	
+												</where>
+												ORDER BY TRAN_NO
+											
+											 ) inner_table
+						WHERE ROWNUM &lt;= #{search.endRowNum} )
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum} 
+	 </select>
+	 
+	 
+	 <select  id="getSalesList"  parameterType="map" 	resultMap="purchaseSelectMap">
+	  	SELECT *
+	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  					FROM		(	SELECT * 
+											FROM TRANSACTION 
+												<where>
+													<if test="search.searchCondition != null">
+														<if test="search.searchCondition == '0' and search.searchKeyword !='' ">
+											 				BUYER_ID LIKE '%' || #{search.searchKeyword} || '%' 
+														</if>
+														<if test="search.searchCondition == '1' and search.searchKeyword !='' ">
+											 				PAYMENT_OPTION = #{search.searchKeyword} 
+														</if>
+														<if test="search.searchCondition == '2' and search.searchKeyword !='' ">
+											 				TRAN_STATUS_CODE = #{search.searchKeyword} 
+														</if>
+													</if> 
+												</where>
+						) inner_table 
+						WHERE ROWNUM &lt;= #{search.endRowNum} ) 
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum} 
+	 </select>
+	 
+	 
+	 <update	id="updateTranCode"	parameterType="purchase" >
+	   	UPDATE TRANSACTION 
+	   	<set>
+	   		TRAN_STATUS_CODE=#{tranCode:CHAR} 
+	   	</set>
+	   	WHERE TRAN_NO = #{tranNo}
+	 </update>
+	 	<!--  위 두번째 subQuery 의  
+	 			WHERE ROWNUM &lt;= #{endRowNum} ) 는
+	 			WHERE ROWNUM <= #{endRowNum} ) 의미이며..
+	 			< 는 keyword 로 &lt; 를	사용.
+	 			
+	 			<![CDATA[  ~~~  ]]> 를 이용하여 아래와 같이 사용  할 수 있다.
+	 			CDATA ==> Character Data 의 의미 Java 에서 \n 같은 특수문자 처리  
+
+				WHERE ROWNUM <![CDATA[ <=]]> #{endRowNum} )
+		-->
+	
+	<!-- SQL : SELECT ROW Count -->	 
+	<select  id="getTotalPurchaseCount"  parameterType="map"	 resultType="int">
+	  	SELECT COUNT(*) FROM(	SELECT * FROM TRANSACTION 
+							<where>
+								BUYER_ID = #{buyerId} 
+								<if test="search.searchCondition != null">
+									<if test="search.searchCondition == 0 and search.searchKeyword !='' ">
+					 					AND TRAN_STATUS_CODE = #{search.searchKeyword} 
+									</if>
+								</if>
+							</where>
+						 ) countTable						
+	 </select>
+	
+	 <select  id="getTotalSalesCount"  parameterType="search"	 resultType="int">
+	  	SELECT COUNT(*) FROM(	SELECT * FROM TRANSACTION 
+						<if test="searchCondition != null">
+							<where>
+								<if test="searchCondition == 0 and searchKeyword !='' ">
+					 				BUYER_ID LIKE '%' || #{searchKeyword} || '%' 
+								</if>
+								<if test="searchCondition == 1 and searchKeyword !='' ">
+					 				PAYMENT_OPTION = #{searchKeyword} 
+								</if>
+								<if test="searchCondition == 2 and searchKeyword !='' ">
+					 				TRAN_STATUS_CODE = #{searchKeyword} 
+								</if>
+							</where>
+						</if> ) countTable						
+	 </select>
+	 
+</mapper>
