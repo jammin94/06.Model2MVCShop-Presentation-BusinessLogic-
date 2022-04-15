@@ -7,7 +7,7 @@
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 <script>
-function fncGetProductList(currentPage){
+function fncGetPurchaseList(currentPage){
 	document.getElementById("currentPage").value = currentPage;
    	document.detailForm.submit();	
 }
@@ -125,7 +125,7 @@ function fncGetProductList(currentPage){
 			 --%>
 			 
 			 	<c:if test="${ i.tranCode.trim() eq '1' && user.role eq 'user'}">
-			 		<a href="/updatePurchaseView.do?tranNo=${i.tranNo }">구매 수정하기</a>
+			 		<a href="/updatePurchaseView.do?tranNo=${i.tranNo }">구매 상세정보 수정하기</a>
 			 	</c:if>
 			 	<c:if test="${ i.tranCode.trim() eq '2' && user.role eq 'user'}">
 			 		<a href="/updateTranCode.do?tranNo=${i.tranNo }&tranCode=3">도착완료 확인하기</a>
@@ -149,15 +149,15 @@ function fncGetProductList(currentPage){
 		<input type="hidden" id="currentPage" name="currentPage" value=""/>
 			
 			<c:if test="${resultPage.currentPage>resultPage.pageUnit }">
-				<a href="/listPurchase.do?page=${resultPage.endUnitPage()-1}">이전</a>
+				<a href="javascript:fncGetPurchaseList('${resultPage.currentPage-1}')">이전</a>
 			</c:if>
 			
 			<c:forEach var="i" begin="${resultPage.beginUnitPage}" end="${resultPage.endUnitPage }" varStatus="status" >
-				<a href="/listPurchase.do?page=${status.count }">${status.count }</a>
+				<a href="javascript:fncGetPurchaseList('${status.count }');">${status.count }</a>
 			</c:forEach>
 			
 			<c:if test="${resultPage.endUnitPage<resultPage.maxPage }">
-				<a href="/listPurchase.do?page=${resultPage.endUnitPage()+1}">다음</a>
+				<a href="javascript:fncGetPurchaseList('${resultPage.currentPage+1}')">다음</a>
 			</c:if>
 			
 		</td>
