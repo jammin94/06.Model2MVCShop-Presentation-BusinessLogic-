@@ -132,10 +132,11 @@ function fncGetProductList(currentPage){
 		<td class="ct_line02"></td>
 		<td class="ct_list_b">등록일</td>	
 		<td class="ct_line02"></td>
-		<td class="ct_list_b">현재상태</td>	
+		<td class="ct_list_b">현재상태</td>
+		<td class="ct_line02"></td>	
 	</tr>
 	<tr>
-		<td colspan="11" bgcolor="808285" height="1"></td>
+		<td colspan="13" bgcolor="808285" height="1"></td>
 	</tr>
 
 	<c:forEach var="i" items= "${list}" varStatus="status" >
@@ -161,7 +162,7 @@ function fncGetProductList(currentPage){
 		</td>		
 	</tr>
 	<tr>
-		<td colspan="11" bgcolor="D6D7D6" height="1"></td>
+		<td colspan="13" bgcolor="D6D7D6" height="1"></td>
 	</tr>
 	</c:forEach>
 </table>
@@ -184,7 +185,7 @@ function fncGetProductList(currentPage){
 		 </c:choose>
 		 
 		 <c:forEach var="i" begin="${resultPage.beginUnitPage}" end="${resultPage.endUnitPage }" varStatus="status">
-		 	<a href="javascript:fncGetProductList('${status.count }');">${status.count }</a>
+		 	<a href="javascript:fncGetProductList('${i }');">${i }</a>
 		 </c:forEach>
 		 
 		 <c:choose>
@@ -192,7 +193,7 @@ function fncGetProductList(currentPage){
 		 		
 		 	</c:when>
 		 	<c:otherwise>
-		 		<a href="javascript:fncGetProductList('${resultPage.currentPage+1}')">다음</a>
+		 		<a href="javascript:fncGetProductList('${resultPage.endUnitPage+1}')">다음</a>
 		 	</c:otherwise>
 		 </c:choose>
     	</td>

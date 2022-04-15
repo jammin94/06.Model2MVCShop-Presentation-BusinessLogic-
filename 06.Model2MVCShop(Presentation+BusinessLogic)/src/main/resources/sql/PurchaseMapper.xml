@@ -45,7 +45,7 @@
 			RECEIVER_PHONE = #{receiverPhone:VARCHAR}, 
 			DLVY_ADDR =	#{divyAddr:VARCHAR}, 
 			DLVY_REQUEST = #{divyRequest:VARCHAR}, 
-			DLVY_DATE = #{divyDate:VARCHAR}
+			DLVY_DATE = #{divyDate:DATE}
 			 
 	   	</set>
 	   	WHERE TRAN_NO = #{tranNo}
@@ -67,7 +67,7 @@
 														</if>
 													</if>	
 												</where>
-												ORDER BY TRAN_NO
+												ORDER BY TRAN_NO DESC
 											
 											 ) inner_table
 						WHERE ROWNUM &lt;= #{search.endRowNum} )
