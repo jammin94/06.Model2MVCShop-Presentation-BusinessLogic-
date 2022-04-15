@@ -35,6 +35,62 @@ function fncGetPurchaseList(currentPage){
 	</tr>
 </table>
 
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
+	<tr>
+		<td align="right">
+			<select name="searchCondition" class="ct_input_g" style="width:80px">
+			
+			 <c:choose>
+		 		<c:when test="${search.searchCondition =='0' || search.searchCondition == null}">
+		 			<option value="0" selected>상품번호</option>
+		 			<option value="1">상품명</option>
+		 			<option value="2">상품가격</option>
+		 		</c:when>
+		
+		 		<c:when test="${search.searchCondition =='1'}">
+		 			<option value="0">상품번호</option>
+		 			<option value="1" selected>상품명</option>
+		 			<option value="2">상품가격</option>
+		 		</c:when>
+		 		
+		 		<c:when test="${search.searchCondition =='2'}">
+		 			<option value="0">상품번호</option>
+		 			<option value="1">상품명</option>
+		 			<option value="2" selected>상품가격</option>
+		 		</c:when>
+
+			 </c:choose>
+			 
+			</select>
+			<input 	type="text" name="searchKeyword"  value="${! empty search.searchKeyword ? search.searchKeyword : "" }"
+							class="ct_input_g" style="width:200px; height:19px" >
+		</td>
+		
+		<td align="right" width="70">
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td width="17" height="23">
+						<img src="/images/ct_btnbg01.gif" width="17" height="23">
+					</td>
+					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
+						<a href="javascript:fncGetPurchaseList(1);">검색</a>
+					</td>
+					<td width="14" height="23">
+						<img src="/images/ct_btnbg03.gif" width="14" height="23">
+					</td>
+				</tr>
+			
+			</table>
+			<td align="left">
+		<input type="radio" id="Desc" name="Order" value="Desc">
+		<label for="Desc">가격 높은순</label>
+		<input type="radio" id="Asc" name="Order" value="Asc">
+		<label for="Asc">가격 낮은순</label>
+	</td>
+		</td>
+	</tr>
+</table>
+
 <table width="100%" border="0" cellspacing="0" cellpadding="0"	style="margin-top: 10px;">
 	<tr>
 		<td colspan="11">전체  ${resultPage.totalCount} 건수,	현재 ${resultPage.currentPage} 페이지</td>
@@ -130,7 +186,7 @@ function fncGetPurchaseList(currentPage){
 			</c:if>
 			
 			<c:forEach var="i" begin="${resultPage.beginUnitPage}" end="${resultPage.endUnitPage }" varStatus="status" >
-				<a href="javascript:fncGetPurchaseList('${i }');">${i }</a>
+				<a href="javascript:fncGetPurchaseList('${i }');">${i }</a> 
 			</c:forEach>
 			
 			<c:if test="${resultPage.endUnitPage<resultPage.maxPage }">

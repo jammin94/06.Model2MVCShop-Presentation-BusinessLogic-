@@ -183,15 +183,14 @@ public class PurchaseController {
 	}
 	
 	@RequestMapping("/updateTranCode.do")
-	public ModelAndView updateTranCode( @ModelAttribute("purchase") Purchase purchase, @ModelAttribute("search") Search search ) throws Exception {
-		
-		System.out.println(search);
+	public ModelAndView updateTranCode( @ModelAttribute("purchase") Purchase purchase) throws Exception {	
+
 		System.out.println("/updateTranCode.do");
 		
 		purchaseService.updateTrancode(purchase);
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("redirect:/purchase/listPurchase.jsp");
+		modelAndView.setViewName("redirect:/listPurchase.do");
 		
 		return modelAndView;
 	
