@@ -94,7 +94,7 @@ public class ProductController {
 	@RequestMapping("/updateProductView.do")
 	public String UpdateProductView( @RequestParam("prodNo") String prodNo, Model model ) throws Exception {
 
-		System.out.println("/addProductView.do");
+		System.out.println("/updateProductView.do");
 		//Business Logic
 		Product product=productService.getProduct(Integer.parseInt(prodNo));
 		

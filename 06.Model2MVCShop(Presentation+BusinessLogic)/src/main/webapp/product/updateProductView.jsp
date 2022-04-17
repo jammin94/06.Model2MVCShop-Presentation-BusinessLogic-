@@ -58,7 +58,7 @@ function fncAddProduct(){
 		<td background="/images/ct_ttl_img02.gif" width="100%" style="padding-left: 10px;">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td width="93%" class="ct_ttl01">상품등록</td>
+					<td width="93%" class="ct_ttl01">상품수정</td>
 					<td width="20%" align="right">&nbsp;</td>
 				</tr>
 			</table>
@@ -111,7 +111,7 @@ function fncAddProduct(){
 		</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">
-			<input type="text" readonly="readonly" name="manuDate" value="${product.prodManuDate }"
+			<input type="text" readonly="readonly" name="manuDate" value="${product.manuDate }"
 						class="ct_input_g" style="width: 100px; height: 19px" maxLength="10" minLength="6"/>&nbsp;
 						<img 	src="../images/ct_icon_date.gif" width="15" height="15" 
 									onclick="show_calendar('document.detailForm.manuDate', document.detailForm.manuDate.value)" />
